@@ -1,1 +1,1 @@
-1.2.0: Initial version for all versions
+1.2.1: Initial version for all versions
