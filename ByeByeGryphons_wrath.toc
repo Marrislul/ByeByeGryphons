@@ -1,7 +1,7 @@
-## Interface: 100206
+## Interface: 30403
 ## Title: Bye Bye Gryphons
 ## Notes: Removes the Gryphons left and right on the action bars.
 ## Author: Marris
 ## Version: @project-version@
 
-ByeByeGryphons.lua
+ByeByeGryphons-classic.lua
