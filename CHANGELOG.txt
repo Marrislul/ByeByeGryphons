@@ -1,1 +1,1 @@
-1.2.1: Initial version for all versions
+1.3.0: Updated for Cataclysm
