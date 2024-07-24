@@ -3,6 +3,8 @@
 ## Notes: Removes the Gryphons left and right on the action bars.
 ## Author: Marris
 ## Version: @project-version@
-## SavedVariables: ByeByeGryphons_Settings
+## SavedVariables: ByeByeGryphonsDB
+## OptionalDeps: Ace3
 
+embeds.xml
 ByeByeGryphons-classic.lua

@@ -1,2 +1,2 @@
-3.0.0:
-- Changed to ACE for retail
+3.0.1:
+- Added ACE to all addons
