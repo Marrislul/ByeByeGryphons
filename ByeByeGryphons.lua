@@ -1,95 +1,83 @@
--- Event handling frame
-local frame = CreateFrame("Frame")
-frame:RegisterEvent("ADDON_LOADED")
-frame:RegisterEvent("PLAYER_LOGIN")
-frame:RegisterEvent("PLAYER_LOGOUT")
+local ByeByeGryphons = LibStub("AceAddon-3.0"):NewAddon("ByeByeGryphons", "AceConsole-3.0", "AceEvent-3.0")
+local AceConfig = LibStub("AceConfig-3.0")
+local AceConfigDialog = LibStub("AceConfigDialog-3.0")
 
--- Initialize global settings variable
-_G.ByeByeGryphons_Settings = _G.ByeByeGryphons_Settings or { LeftGryphonHidden = true, RightGryphonHidden = true, PrintEnabled = true }
+local defaults = {
+    profile = {
+        LeftGryphonHidden = true,
+        RightGryphonHidden = true,
+        PrintEnabled = true,
+    },
+}
 
--- Function to update the checkboxes based on the loaded settings
-local function updateCheckboxes()
-    ByeByeGryphonsLeftCheckBox:SetChecked(_G.ByeByeGryphons_Settings.LeftGryphonHidden)
-    ByeByeGryphonsRightCheckBox:SetChecked(_G.ByeByeGryphons_Settings.RightGryphonHidden)
-    ByeByeGryphonsPrintCheckBox:SetChecked(_G.ByeByeGryphons_Settings.PrintEnabled)
+local options = {
+    name = "Bye Bye Gryphons",
+    handler = ByeByeGryphons,
+    type = "group",
+    args = {
+        PrintEnabled = {
+            type = "toggle",
+            name = "Enable Print Output",
+            desc = "Enable or disable print output.",
+            get = function(info) return ByeByeGryphons.db.profile.PrintEnabled end,
+            set = function(info, value) 
+                ByeByeGryphons.db.profile.PrintEnabled = value 
+                ByeByeGryphons:LoadSettings()
+            end,
+        },
+        LeftGryphonHidden = {
+            type = "toggle",
+            name = "Hide Left Gryphon",
+            desc = "Hide or show the left gryphon.",
+            get = function(info) return ByeByeGryphons.db.profile.LeftGryphonHidden end,
+            set = function(info, value) 
+                ByeByeGryphons.db.profile.LeftGryphonHidden = value 
+                ByeByeGryphons:LoadSettings()
+            end,
+        },
+        RightGryphonHidden = {
+            type = "toggle",
+            name = "Hide Right Gryphon",
+            desc = "Hide or show the right gryphon.",
+            get = function(info) return ByeByeGryphons.db.profile.RightGryphonHidden end,
+            set = function(info, value) 
+                ByeByeGryphons.db.profile.RightGryphonHidden = value 
+                ByeByeGryphons:LoadSettings()
+            end,
+        },
+    },
+}
+
+function ByeByeGryphons:OnInitialize()
+    self.db = LibStub("AceDB-3.0"):New("ByeByeGryphonsDB", defaults, true)
+    AceConfig:RegisterOptionsTable("ByeByeGryphons", options)
+    self.optionsFrame = AceConfigDialog:AddToBlizOptions("ByeByeGryphons", "Bye Bye Gryphons")
 end
 
--- Function to load and apply settings based on the current configuration
-local function loadSettings()
-    -- Apply the settings to the main menu end caps
-    if _G.ByeByeGryphons_Settings.LeftGryphonHidden then
-        MainMenuBar.EndCaps.LeftEndCap:Hide()
+function ByeByeGryphons:OnEnable()
+    self:RegisterEvent("PLAYER_ENTERING_WORLD", "LoadSettings")
+end
+
+function ByeByeGryphons:LoadSettings()
+    local settings = self.db.profile
+    
+    if MainMenuBar.EndCaps.LeftEndCap and MainMenuBar.EndCaps.RightEndCap then
+        if settings.LeftGryphonHidden then
+            MainMenuBar.EndCaps.LeftEndCap:Hide()
+        else
+            MainMenuBar.EndCaps.LeftEndCap:Show()
+        end
+
+        if settings.RightGryphonHidden then
+            MainMenuBar.EndCaps.RightEndCap:Hide()
+        else
+            MainMenuBar.EndCaps.RightEndCap:Show()
+        end
     else
-        MainMenuBar.EndCaps.LeftEndCap:Show()
+        print("MainMenuBar.EndCaps elements not found")
     end
 
-    if _G.ByeByeGryphons_Settings.RightGryphonHidden then
-        MainMenuBar.EndCaps.RightEndCap:Hide()
-    else
-        MainMenuBar.EndCaps.RightEndCap:Show()
-    end
-
-    if _G.ByeByeGryphons_Settings.PrintEnabled then
-        print("Bye Bye Gryphons: Settings applied.")
+    if settings.PrintEnabled then
+        self:Print("Settings applied.")
     end
 end
-
--- Function to create the options panel
-local function createOptionsPanel()
-    local panel = CreateFrame("Frame", "ByeByeGryphonsPanel")
-    panel.name = "Bye Bye Gryphons"
-    InterfaceOptions_AddCategory(panel)
-
-    -- Title for the options panel
-    local title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-    title:SetPoint("TOPLEFT", 16, -16)
-    title:SetText("Bye Bye Gryphons Settings")
-
-    local checkBoxPrint = CreateFrame("CheckButton", "ByeByeGryphonsPrintCheckBox", panel, "UICheckButtonTemplate")
-    checkBoxPrint:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -10)
-    checkBoxPrint:SetScript("OnClick", function(self)
-        _G.ByeByeGryphons_Settings.PrintEnabled = self:GetChecked()
-        loadSettings()  -- Update settings immediately
-    end)
-    checkBoxPrint:SetChecked(_G.ByeByeGryphons_Settings.PrintEnabled)
-    checkBoxPrint.text = checkBoxPrint:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    checkBoxPrint.text:SetPoint("LEFT", checkBoxPrint, "RIGHT", 8, 0)
-    checkBoxPrint.text:SetText("Enable Print Output")
-
-    local checkBoxLeft = CreateFrame("CheckButton", "ByeByeGryphonsLeftCheckBox", panel, "UICheckButtonTemplate")
-    checkBoxLeft:SetPoint("TOPLEFT", checkBoxPrint, "BOTTOMLEFT", 0, -8)
-    checkBoxLeft:SetScript("OnClick", function(self)
-        _G.ByeByeGryphons_Settings.LeftGryphonHidden = self:GetChecked()
-        loadSettings()  -- Update settings immediately
-    end)
-    checkBoxLeft:SetChecked(_G.ByeByeGryphons_Settings.LeftGryphonHidden)
-    checkBoxLeft.text = checkBoxLeft:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    checkBoxLeft.text:SetPoint("LEFT", checkBoxLeft, "RIGHT", 8, 0)
-    checkBoxLeft.text:SetText("Hide Left Gryphon")
-
-    local checkBoxRight = CreateFrame("CheckButton", "ByeByeGryphonsRightCheckBox", panel, "UICheckButtonTemplate")
-    checkBoxRight:SetPoint("TOPLEFT", checkBoxLeft, "BOTTOMLEFT", 0, -8)
-    checkBoxRight:SetScript("OnClick", function(self)
-        _G.ByeByeGryphons_Settings.RightGryphonHidden = self:GetChecked()
-        loadSettings()  -- Update settings immediately
-    end)
-    checkBoxRight:SetChecked(_G.ByeByeGryphons_Settings.RightGryphonHidden)
-    checkBoxRight.text = checkBoxRight:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-    checkBoxRight.text:SetPoint("LEFT", checkBoxRight, "RIGHT", 8, 0)
-    checkBoxRight.text:SetText("Hide Right Gryphon")
-end
-
--- Create the options panel as soon as the addon is loaded
-local optionsPanel = createOptionsPanel()
-
--- Event handling function
-frame:SetScript("OnEvent", function(self, event, arg1, ...)
-    if event == "ADDON_LOADED" and arg1 == "ByeByeGryphons" then
-        updateCheckboxes()  -- Update checkboxes after loading settings
-    elseif event == "PLAYER_LOGIN" then
-        updateCheckboxes()  -- Update checkboxes after loading settings
-        loadSettings()  -- Load settings on login
-    elseif event == "PLAYER_LOGOUT" then
-        -- Settings are automatically saved by WoW
-    end
-end)
