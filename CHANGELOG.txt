@@ -1,2 +1,2 @@
-3.2.1:
-- updated .toc
+3.2.2:
+- updated version
