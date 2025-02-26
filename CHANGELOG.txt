@@ -1,2 +1,2 @@
-3.2.6:
-- fixed version
+3.2.7:
+- updated to 11.1.0
