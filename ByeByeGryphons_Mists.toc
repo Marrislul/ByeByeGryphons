@@ -1,4 +1,4 @@
-## Interface: 11507
+## Interface: 50501
 ## Title: Bye Bye Gryphons
 ## Notes: Removes the Gryphons left and right on the action bars.
 ## Author: Marris
