@@ -61,20 +61,20 @@ end
 function ByeByeGryphons:LoadSettings()
     local settings = self.db.profile
     
-    if MainMenuBar.EndCaps.LeftEndCap and MainMenuBar.EndCaps.RightEndCap then
+    if MainActionBar.EndCaps.LeftEndCap and MainActionBar.EndCaps.RightEndCap then
         if settings.LeftGryphonHidden then
-            MainMenuBar.EndCaps.LeftEndCap:Hide()
+            MainActionBar.EndCaps.LeftEndCap:Hide()
         else
-            MainMenuBar.EndCaps.LeftEndCap:Show()
+            MainActionBar.EndCaps.LeftEndCap:Show()
         end
 
         if settings.RightGryphonHidden then
-            MainMenuBar.EndCaps.RightEndCap:Hide()
+            MainActionBar.EndCaps.RightEndCap:Hide()
         else
-            MainMenuBar.EndCaps.RightEndCap:Show()
+            MainActionBar.EndCaps.RightEndCap:Show()
         end
     else
-        print("MainMenuBar.EndCaps elements not found")
+        print("MainActionBar.EndCaps elements not found")
     end
 
     if settings.PrintEnabled then
