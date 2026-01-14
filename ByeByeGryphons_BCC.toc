@@ -1,0 +1,10 @@
+## Interface: 20505
+## Title: Bye Bye Gryphons
+## Notes: Removes the Gryphons left and right on the action bars.
+## Author: Marris
+## Version: @project-version@
+## SavedVariables: ByeByeGryphonsDB
+## OptionalDeps: Ace3
+
+embeds.xml
+ByeByeGryphons-classic.lua
