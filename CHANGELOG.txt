@@ -1,2 +1,2 @@
-4.1.1:
-- added Midnight support
+4.1.2:
+- update for 1.15.8
